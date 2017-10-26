@@ -1,21 +1,20 @@
-import requests  
+from pip._vendor import requests
 import datetime
+import time
+import pprint
 
 class BotHandler:
 
     def __init__(self, token):
         self.token = token
         self.api_url = "https://api.telegram.org/bot{}/".format(token)
-        print(token)
 
     def get_updates(self, offset=None, timeout=30):
-        #print('in  get updates')
         method = 'getUpdates'
         params = {'timeout': timeout, 'offset': offset}
         resp = requests.get(self.api_url + method, params)
-        #print('got response')
         result_json = resp.json()['result']
-        print(result_json)
+        pp.pprint(result_json)
         return result_json
 
     def send_message(self, chat_id, text):
@@ -34,16 +33,20 @@ class BotHandler:
 
         return last_update
 
-greet_bot = BotHandler('390252714:AAE0YvbmlmPOkyPp-JbmW33ujEOuL8qOgAw')  
-greetings = ('здравствуй', 'привет', 'ку', 'здорово')  
+greet_bot = BotHandler('390252714:AAE0YvbmlmPOkyPp-JbmW33ujEOuL8qOgAw')
+greetings = ('здравствуй', 'привет', 'ку', 'здорово')
 now = datetime.datetime.now()
+pp = pprint.PrettyPrinter(indent=1)
+loopcounter = 0
 
-def main():  
+def main():
     new_offset = None
     today = now.day
     hour = now.hour
+    global loopcounter
 
     while True:
+        print('Loop: #{}'.format(loopcounter))
         greet_bot.get_updates(new_offset)
 
         last_update = greet_bot.get_last_update()
@@ -70,7 +73,10 @@ def main():
 
         new_offset = last_update_id + 1
 
-if __name__ == '__main__':  
+        time.sleep(5)
+        loopcounter += 1
+
+if __name__ == '__main__':
     try:
         main()
     except KeyboardInterrupt:
