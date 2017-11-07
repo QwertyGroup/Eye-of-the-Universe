@@ -22,7 +22,3 @@ dispatcher.add_handler(CommandHandler('start', OnStart))
 dispatcher.add_handler(MessageHandler(Filters.text, Echo))
 
 updater.start_polling()
-
-time.sleep(30)
-print('finished.')
-updater.stop()
