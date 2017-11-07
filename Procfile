@@ -1,1 +1,1 @@
-web: python EyeOfTheUniverse.py
+worker: python EyeOfTheUniverse.py

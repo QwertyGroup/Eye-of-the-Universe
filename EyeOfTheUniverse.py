@@ -16,6 +16,7 @@ def OnStart(bot, update):
 
 def Echo(bot, update):
     bot.send_message(chat_id=update.message.chat_id, text=update.message.text)
+    print(update.message.text)
 
 
 dispatcher.add_handler(CommandHandler('start', OnStart))
