@@ -1,1 +1,1 @@
-worker: python EyeOfTheUniverse.py
+bot: python EyeOfTheUniverse.py
