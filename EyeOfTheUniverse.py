@@ -51,7 +51,9 @@ def OnTestMessage(bot, update):
     time.sleep(5)
     # os.remove('tmp/file.txt')
     # os.rmdir('tmp/')
-    print('deleted.')
+    # print('deleted.')
+    print(os.getcwd())
+    bot.send_message(chat_id=update.message.chat_id, text=os.getcwd())
 
 
 dispatcher.add_handler(CommandHandler('start', OnStart))
