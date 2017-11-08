@@ -30,25 +30,35 @@ def AudioRepl(bot, update):
 def VoiceRepl(bot, update):
     bot.send_message(chat_id=update.message.chat_id, text="VoiceRepl")
     print('VoiceRepl file received')
-    print(update.message.voice.duration, update.message.voice.mime_type)
+    ans = f'{update.message.voice.duration}, {update.message.voice.mime_type}'
+    print(ans)
+    bot.send_message(chat_id=update.message.chat_id, text=ans)
+
+
+def OnTestMessage(bot, update):
+    bot.send_message(chat_id=update.message.chat_id, text="OnTestMessageStart")
+    directory = os.path.dirname('tmp/')
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+    with open('tmp/file.txt', 'w') as fi:
+        fi.write('which is always equal to the length of the string')
+
+    with open('tmp/file.txt') as fi:
+        lines = fi.readlines()
+        print(lines)
+        bot.send_message(chat_id=update.message.chat_id, text=lines)
+
+    time.sleep(5)
+    os.remove('tmp/file.txt')
+    os.rmdir('tmp/')
+    print('deleted.')
 
 
 dispatcher.add_handler(CommandHandler('start', OnStart))
+dispatcher.add_handler(CommandHandler('test!', OnTestMessage))
+
 dispatcher.add_handler(MessageHandler(Filters.text, Echo))
 dispatcher.add_handler(MessageHandler(Filters.audio, AudioRepl))
 dispatcher.add_handler(MessageHandler(Filters.voice, VoiceRepl))
 
-# updater.start_polling()
-
-directory = os.path.dirname('tmp/')
-if not os.path.exists(directory):
-    os.makedirs(directory)
-with open('tmp/file.txt', 'w') as fi:
-    fi.write('which is always equal to the length of the string')
-
-with open('tmp/file.txt') as fi:
-    print(fi.readlines())
-
-time.sleep(5)
-os.remove('tmp/file.txt')
-os.rmdir('tmp/')
+updater.start_polling()
