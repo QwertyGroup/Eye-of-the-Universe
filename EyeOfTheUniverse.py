@@ -49,8 +49,8 @@ def OnTestMessage(bot, update):
         bot.send_message(chat_id=update.message.chat_id, text=lines)
 
     time.sleep(5)
-    os.remove('tmp/file.txt')
-    os.rmdir('tmp/')
+    # os.remove('tmp/file.txt')
+    # os.rmdir('tmp/')
     print('deleted.')
 
 
