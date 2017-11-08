@@ -51,9 +51,10 @@ def OnTestMessage(bot, update):
     with open('TESTFILE_T.txt', 'w') as fi:
         fi.write("My test text!")
     time.sleep(3)
-    # os.remove('tmp/file.txt')
-    # os.rmdir('tmp/')
-    # print('deleted.')
+    os.remove('tmp/file.txt')
+    os.rmdir('tmp/')
+    os.remove('TESTFILE_T.txt')
+    print('deleted.')
     dlist = os.listdir('.')
     print(os.getcwd())
     bot.send_message(chat_id=update.message.chat_id, text=os.getcwd())
