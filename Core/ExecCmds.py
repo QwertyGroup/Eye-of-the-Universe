@@ -18,3 +18,4 @@ def OnDimSelected(indiv, update):
 
     callbackData = update.callback_query.data
     indiv.Librarian = Librarians[callbackData]()
+    update.callback_query.edit_message_text(f'{indiv.Librarian.Name}')

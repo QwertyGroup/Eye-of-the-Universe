@@ -22,8 +22,8 @@ class Individual:
         else:
             Log(f"Delegate is empty. Can't exec. GUID: {self.GUID}")
 
-    def Die():
-        register.Remove(self.row)
+    def Die(self):
+        register.Remove(self.regRow)
 
     def ReadField(self, key):
         return register.ReadField(self, key)

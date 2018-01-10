@@ -51,7 +51,7 @@ class Register():
         self.local.update_cell(keyCell.row, keyCell.col + 1, val)
 
     def Community(self):
-        rng = [cell.value for cell in self.register.range(f'A1:{self.LastEmptyCell()}')]
+        rng = [cell.value for cell in self.register.range(f'A1:{self.LastEmptyCell()}') if cell.value != 'removed']
         if len(rng) == 1:
             return list()
         else:
@@ -59,7 +59,6 @@ class Register():
             return rng
 
     def Remove(self, row):
-        print('here')
         self.register.update_cell(row, 1, 'removed')
 
     def Add(self, GUID):
