@@ -3,7 +3,6 @@ from Core.CloudLibrarian import Register
 
 register = Register()
 
-
 class Individual:
     def __init__(self, GUID):
         self.GUID = GUID

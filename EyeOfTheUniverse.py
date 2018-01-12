@@ -7,8 +7,9 @@ from telegram.ext import *
 
 from Core.Community import *
 from Core.ExecCmds import *
-from Core.Log import Log
+from Core.Log import Log, IsLoggingEnabled
 
+IsLoggingEnabled = True
 community = Community()
 
 def GO(bot, update):

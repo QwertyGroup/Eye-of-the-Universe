@@ -1,6 +1,6 @@
-IsEnabled = False
+IsLoggingEnabled = False
 
 
 def Log(message):
-    if IsEnabled:
+    if IsLoggingEnabled:
         print(message)
