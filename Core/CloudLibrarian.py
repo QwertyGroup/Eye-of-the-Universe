@@ -26,19 +26,6 @@ class BasicL:
             boxGUID = self.user.GUID 
             self.user.WriteField('CurrentBox', boxGUID)
 
-        # TODO: connect to db and get all boxes and waves from user.regRow
-        # then execCmds: handle new FileView by GUID
-        # new files: GUID = uuid.uuid4() - that is random uuid/guid
-    
-        #test = [Item('item1','box','id1'),
-        #        Item('item2','box','id2'),
-        #        Item('item3','box','id3'),
-        #        Item('item4','box','id4'),
-        #        Item('item5','box','id5'),
-        #        Item('item6','wave','id6'),
-        #        Item('item7','wave','id7')]
-        #return test
-        
         # For Boxes:
         nextEmpty = self.ParentNext(boxGUID)
         childrenSigns = list()
@@ -59,6 +46,19 @@ class BasicL:
             self.BoxBox.update_cell(lastEmpty, 1, parent)
         childGUID = self.CreateChildBox(parent, name)
     
+    def RenameBox(self, name, current, toRename):
+        name = name.replace(':', ' ')
+
+        pCell = self.BoxCell(current)
+        counter = 2
+        found = False
+        while True: # apperantly will be replaced by faster algo
+            nCell = self.BoxBox.cell(pCell.row, counter)
+            if toRename in nCell.value: found = True; break
+            counter += 1
+        if found: self.BoxBox.update_cell(nCell.row, nCell.col, f'{toRename}:{name}')
+
+
     def ReadLocal(self, key):
         keyCell = self.local.find(key)
         valueCell = self.local.cell(keyCell.row, keyCell.col + 1)
@@ -84,6 +84,7 @@ class BasicL:
         # create new box
         # and add to parent children
         childGUID = uuid.uuid4()
+        self.latestCreated = childGUID
         lastEmpty = self.GetLastEmptyBoxAndIter()
         self.BoxBox.update_cell(lastEmpty, 1, childGUID)
         emptyCell = self.ParentNext(parentGUID)
@@ -167,7 +168,7 @@ class Register():
     def Exist(self, GUID):
         return GUID in self.Community()
 
-    fieldDict = {'GUID': 1, 'Row': 2, 'CurrentBox': 3}  # key:col
+    fieldDict = {'GUID': 1, 'Row': 2, 'CurrentBox': 3, 'Path': 4}  # key:col
 
     def ReadField(self, individual, key):
         row = self.IndividualRow(individual)

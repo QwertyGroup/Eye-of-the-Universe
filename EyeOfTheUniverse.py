@@ -26,6 +26,11 @@ def HandleQuery(bot, update):
     community.Get(GUID).Execute(update)
 
 
+def HandleMessage(bot, update):
+    GUID = str(update.message.chat_id)
+    community.Get(GUID).ExecuteOnMessage(bot, update)
+
+
 def main():
     BotToken = '390252714:AAE0YvbmlmPOkyPp-JbmW33ujEOuL8qOgAw'
     bot = telegram.Bot(token=BotToken)
@@ -34,6 +39,7 @@ def main():
     updater.dispatcher.add_handler(CommandHandler('start', GO))
     updater.dispatcher.add_handler(CommandHandler('go', GO))
     updater.dispatcher.add_handler(CallbackQueryHandler(HandleQuery))
+    updater.dispatcher.add_handler(MessageHandler(Filters.text, HandleMessage))
 
     updater.start_polling()
     print('Listening...')

@@ -1,5 +1,6 @@
 from Core.Log import *
 from Core.CloudLibrarian import Register
+import Core.ExecCmds as eCmds
 
 register = Register()
 
@@ -29,3 +30,14 @@ class Individual:
 
     def WriteField(self, key, val):
         register.WriteField(self, key, val)
+
+    def ExecuteOnMessage(self, bot, update):
+       if self.Librarian.latestCreated != None:
+           self.RenameJustCreated(update.message.text, update)
+           self.Librarian.latestCreated = None
+              
+    def RenameJustCreated(self, name, update):
+        current = self.ReadField('CurrentBox')
+        toRename = str(self.Librarian.latestCreated)
+        self.Librarian.RenameBox(name, current, toRename)
+        eCmds.BootUp(self, update)
