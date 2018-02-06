@@ -1,45 +1,30 @@
 import sys
 
-from emoji import emojize
-
 import telegram
-from telegram.ext import *
+from telegram.ext import Updater, CommandHandler, CallbackQueryHandler, MessageHandler, Filters
 
-from Core.Community import *
-from Core.ExecCmds import *
-from Core.Log import Log, IsLoggingEnabled
+from core.community import Community
 
-IsLoggingEnabled = True
 community = Community()
 
-def GO(bot, update):
-    GUID = str(update.message.chat_id)
-    if not community.Exist(GUID):
-        community.New(GUID)
-    indiv = community.Get(GUID)
-    SendDimSelection(indiv, update)
+def go(bot, update):
+    community.handle_login(bot, update)
+    
+def handle_query(bot, update):
+    community.provide_query(bot, update)
 
-
-def HandleQuery(bot, update):
-    GUID = str(update.callback_query.from_user.id)
-    Log(f'Handling: {GUID}')
-    community.Get(GUID).Execute(update)
-
-
-def HandleMessage(bot, update):
-    GUID = str(update.message.chat_id)
-    community.Get(GUID).ExecuteOnMessage(bot, update)
-
+def handle_message(bot, update):
+    community.provide_message(bot, update)
 
 def main():
     BotToken = '390252714:AAE0YvbmlmPOkyPp-JbmW33ujEOuL8qOgAw'
     bot = telegram.Bot(token=BotToken)
     updater = Updater(token=BotToken)
 
-    updater.dispatcher.add_handler(CommandHandler('start', GO))
-    updater.dispatcher.add_handler(CommandHandler('go', GO))
-    updater.dispatcher.add_handler(CallbackQueryHandler(HandleQuery))
-    updater.dispatcher.add_handler(MessageHandler(Filters.text, HandleMessage))
+    updater.dispatcher.add_handler(CommandHandler('start', go))
+    updater.dispatcher.add_handler(CommandHandler('go', go))
+    updater.dispatcher.add_handler(CallbackQueryHandler(handle_query))
+    updater.dispatcher.add_handler(MessageHandler(Filters.text, handle_message))
 
     updater.start_polling()
     print('Listening...')

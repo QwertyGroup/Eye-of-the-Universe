@@ -21,24 +21,29 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Core\BtnGen.py" />
-    <Compile Include="Core\CloudGuard.py" />
-    <Compile Include="Core\CloudLibrarian.py" />
-    <Compile Include="Core\Community.py" />
-    <Compile Include="Core\ExecCmds.py" />
-    <Compile Include="Core\Individual.py" />
-    <Compile Include="Core\Log.py" />
-    <Compile Include="Core\__init__.py" />
+    <Compile Include="core\community.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="core\individual.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="core\pyre.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="core\UI_generator.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="core\__init__.py" />
     <Compile Include="EyeOfTheUniverse.py" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Core\" />
+    <Folder Include="C:\Programming\Programs\Py\Eye of the Universe\EyeOfTheUniverse\core\" />
+    <Folder Include="core\" />
     <Folder Include="Storage\" />
     <Folder Include="Storage\Goo\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Storage\Goo\GooCred.json" />
-    <Content Include="Storage\Goo\GooeySecret.json" />
+    <Content Include="Storage\Goo\GooCreds.json" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in

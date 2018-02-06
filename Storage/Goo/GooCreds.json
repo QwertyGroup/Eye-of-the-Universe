@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "eyetheuniversecloud",
+  "private_key_id": "d32fd5583685d464c12c2893fd020bdc241d9cb3",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCltvwX0b+1RVJ5\ny11i+uu/QAyjc93MhyvXf9PG1euvoHD5Obs3OORFgUJ+jFdjgs4HMd7rb6eIWUjY\nYiZ9cEoeIItfGDFlVdaLhw3x6wryw9L7YT76YFJbY//QlRU46JJvRLto7QttxFXj\nStTFPTbogin+6w/kdP8Kg/nqNvZnplw87tF8FSsCapufm2axloSusgaZcxkcz0tM\nccMDxAIkLitqO/yjPWYS/oKJLAmdFuuuFr6srgf93rzMUg0/DybrYg51XqE3jK49\n6N9sFjtPsOrcgY5/Bq0RGw0/TVNbruIJT/rwkry5HtYtWXdwahA4U0DwGKH+ggO8\ni8kYOKGrAgMBAAECggEAAahoDoQXB64m7rhIDBsYGa3IbgOeO1xfHNcpLm+OuSFu\ntHnfmBsM0G8x+HX9ZYk/QSB1PYi8fvmi1bbGOxaaI8rgRX9Y0gSjdwxO6XpO/c14\nJvLxm7Tq1yaBmeBizC5O45Vd8lLZ6lj+s9R9CN4djUvIo6EE0XgR4ouwdZVRUwln\nQ7UuZJXCSFd+/sDnFMXrh7Ees9wHd/6a/uIBYoG2P0EZ4RkirLhChS02KRSzwYFx\noghOXRqFd60OGQBR695AJKA1SE6cVwnntuwunfpF03PH4EiOj9voo6TkvWXsSJ/y\nM5fkl9ADB7l05hHww8/95GFEIS9teQqbeeeE3ThCWQKBgQDSf2Ke0gTvnqSmV/Ma\ngVZQQNVXEr/0B/I21xD+f6MGaSU4AfRcmh9w59j4DPKJz8f0p/clukJdXzmIsJ+m\nUMerPhnsbqlmU7BOGq/jyjBzCiAcxGEPoP0y1el3O5uMoXY/KtfZUk2eWQIpZTcI\nmzLE+x/KqzNqqW/n2Vn+1gpSgwKBgQDJiWMa2qTTEhZCt0jBkEZVb089/rr+P+ye\nS1Hhrx/95C0EEDnhaPGhfwg8lijw0FODPCRLq/zxvsP4fF30SUWqd+cyMkH1xtft\nBSt/J2SeLpIZZj6QuMKG0RabK/Wd5/RRf81t2CfznKNOcr471ddF9lPBLA0XsISP\nw8riNM0ruQKBgCPnCkEgfSsJmfetRI+ew8QIatrhHdBXkp577DAcQQgU4v48hxtM\nRlSRltYoDy4mPGqkQ2kx7aPTXBLOXUyWtpekjfNfpJEJcSbBMoLdt4nHjlaZwBxU\nTxtelOV7SzqfR3XartooSYjakZ3R36MeJXinhHKi5LAqmiWnUsw+YaBVAoGAHnAb\ngbDH+ADhT84ytNk/ZiPbifdw8nlhGT8y7KzwXf4aNmTk+QBKjiOLcOsU39n24vkw\nWiVtnG09V8ggwIZYeTiGuHQStjYD4o5HVXrznVhXRHLGvEDLUGU/zsvC2shvg+eT\ndSWSUx6zI2P9CzhuvOhJGgG3MH6+ZqAhgiyLWDECgYEAiPGdgvdMAGttM8J5iNsG\nkj3evubgh8snPzMD0CpTvJf9b9hezw7I1cg32SUZD24uukd9FuAxGWoguHpUqdnp\nt/T9j2pa8gricxeL6bs5MF+SzeOneqxpLu2MEEq//Bm7LwxzEdi1do0laXRGFKPM\nU+NzOkJGFh5p7cMt+c27NTE=\n-----END PRIVATE KEY-----\n",
+  "client_email": "eyeclouddrive@eyetheuniversecloud.iam.gserviceaccount.com",
+  "client_id": "100181249608632710509",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://accounts.google.com/o/oauth2/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/eyeclouddrive%40eyetheuniversecloud.iam.gserviceaccount.com"
+}
