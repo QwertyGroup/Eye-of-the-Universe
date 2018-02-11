@@ -12,7 +12,7 @@ def gen_file_view_mkp(items, meta): # make this pretty
           InlineKeyboardButton('New', callback_data='New'),
           InlineKeyboardButton('Edit', callback_data='Edit')]
 
-    if items:
+    if items and meta:
         waves = [InlineKeyboardButton(f'💨 {meta[item]["name"]}', callback_data=item) 
                       for item in items if meta[item]['type'] == 'wave']
         if waves:
