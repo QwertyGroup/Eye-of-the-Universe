@@ -24,6 +24,9 @@
     <Compile Include="core\community.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="core\currency_service.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="core\individual.py">
       <SubType>Code</SubType>
     </Compile>

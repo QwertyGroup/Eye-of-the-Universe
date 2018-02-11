@@ -1,6 +1,6 @@
 from core.individual import Individual
 from core.pyre import ignite
-
+from core.currency_service import get_image, get_message
 
 class Community:
     pyre = ignite()
@@ -53,3 +53,26 @@ class Community:
         if not self.exist(GUID):
             self._localCommunity[GUID] = Individual(GUID)
         self._localCommunity[GUID].on_relogin(bot, update)
+
+    def subscribe(self, bot, update):
+        GUID = str(update.message.chat_id)
+        self.add_sub(GUID)
+
+    def add_sub(self, GUID):
+        self.pyre.child(f'subscribers/{GUID}').update({'exist':True})
+
+    def get_subs(self):
+        response = self.pyre.child('subscribers').get().val().items()
+        subs = [sub[0] for sub in response]
+        return subs
+
+    def time_to_notify_subs(self, bot):
+        message = get_message()
+        image = get_image()
+        subs = self.get_subs()
+        for sub in subs:
+            for msg in message.split('*message_separator*'):
+                if msg and msg != '' and msg != '\n':
+                    bot.send_message(sub, msg)
+            #bot.send_photo(sub, image)
+        print('just in time.')

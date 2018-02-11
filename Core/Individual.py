@@ -13,7 +13,7 @@ class Individual():
         self.path = [GUID] # [0] - id, [1] - branch, [-1] - last folder
         self.update_path()
 
-    def die(self): # тунг,
+    def die(self):
         self.pyre.child(self.GUID).remove()
         
     def on_login(self, bot, update):
