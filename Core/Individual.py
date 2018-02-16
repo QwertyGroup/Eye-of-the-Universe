@@ -48,7 +48,10 @@ class Individual():
 
     def on_branch_selected(self, bot, update):
         callbackData = update.callback_query.data
-        self.path = [self.GUID, callbackData]
+        if callbackData == 'Steel Mountain':
+            self.path = [self.GUID, callbackData]
+        if callbackData == 'Digital Expanse':
+            self.path = [callbackData]
         self.update_path()
         self.open(bot, update, callbackData, self.current_path())
         self.nextExec = self.on_item_selected
@@ -162,4 +165,7 @@ class Individual():
         return meta
                 
     def branch_path(self):
-        return self.path_to_string(self.path[:2])
+        if self.path[0] == 'Digital Expanse':
+            return self.path_to_string(self.path[:1])
+        else:
+            return self.path_to_string(self.path[:2])
