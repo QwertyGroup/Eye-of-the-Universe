@@ -21,6 +21,9 @@ def handle_message(bot, update):
 def handle_sub(bot, update):
     community.subscribe(bot, update)
 
+def handle_voice(bot, update):
+    community.provide_voice(bot, update)
+
 
 def enable_sub_service(bot):
     time_now = datetime.now()
@@ -43,8 +46,9 @@ def main():
     updater.dispatcher.add_handler(CommandHandler('sub', handle_sub))
     updater.dispatcher.add_handler(CallbackQueryHandler(handle_query))
     updater.dispatcher.add_handler(MessageHandler(Filters.text, handle_message))
+    updater.dispatcher.add_handler(MessageHandler(Filters.voice, handle_voice))
 
-    enable_sub_service(bot)
+    #enable_sub_service(bot)
 
     updater.start_polling()
     print('Listening...')

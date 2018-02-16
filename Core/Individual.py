@@ -10,6 +10,7 @@ class Individual():
         self.GUID = GUID
         self.nextExec = None
         self.msgHandler = None
+        self.vceHandler = None
         self.path = [GUID] # [0] - id, [1] - branch, [-1] - last folder
         self.update_path()
 
@@ -33,6 +34,9 @@ class Individual():
         message = update.message.text
         self.msgHandler(bot, update, message)
         self.msgHandler = None
+
+    def on_voice(self, bot, update):
+        self.vceHandler(bot, update)
 
 
     def send_markup(self, bot, update, markup, msg):
@@ -69,8 +73,14 @@ class Individual():
             pass
 
         # else open box or maybe send wave
-        self.path.append(callbackData)
-        self.open(bot, update, callbackData, self.current_path())
+        meta = self.load_meta([callbackData])[callbackData]
+        if meta['type'] == 'box':
+            self.path.append(callbackData)
+            self.open(bot, update, callbackData, self.current_path())
+        if meta['type'] == 'wave':
+            bot.forwardMessage(chat_id=update.callback_query.message.chat_id,
+                               from_chat_id=meta['chatId'],
+                               message_id=meta['msgId'])
 
     def on_bw_selected(self, bot, update):
         callbackData = update.callback_query.data
@@ -79,11 +89,26 @@ class Individual():
         if callbackData == 'Box':
             itemGUID = self.create_new_box(bot, update)
         elif callbackData == 'Wave':
-            pass
+            self.listen_new_wave(bot, update)
 
-        self.nextExec = self.on_item_selected
         self.edgeItem = itemGUID
+        self.nextExec = self.on_item_selected
         self.msgHandler = self.on_rename
+
+
+    def listen_new_wave(self, bot, update):
+        self.send_markup(bot, update, None, "Ready. Please send us a voice message.")
+        self.vceHandler = self.on_wave_received
+
+    def on_wave_received(self, bot, update):
+        wave_uuid = str(uuid.uuid4())
+        msgId = update.message.message_id
+        chatId = update.message.chat_id
+        self.pyre.update({self.branch_path() + f'boxes/{self.path[-1]}/': self.collect_items_from(self.path[-1]) + [wave_uuid]})
+        self.pyre.child(self.branch_path() + f'meta/{wave_uuid}').update({'name':'new wave', 'type':'wave', 'chatId':chatId, 'msgId':msgId})
+        self.edgeItem = wave_uuid
+        self.msgHandler = self.on_rename
+        self.open(bot, update, self.path[-1], self.current_path())
 
     def on_rename(self, bot, update, newName):
         self.rename_item(self.edgeItem, newName)

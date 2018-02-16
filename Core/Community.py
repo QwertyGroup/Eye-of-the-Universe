@@ -41,6 +41,9 @@ class Community:
         GUID = str(update.message.chat_id)
         self._localCommunity[GUID].on_message(bot, update)
 
+    def provide_voice(self, bot, update):
+        GUID = str(update.message.chat_id)
+        self._localCommunity[GUID].on_voice(bot, update)
     
     def handle_login(self, bot, update):
         GUID = str(update.message.chat_id)
