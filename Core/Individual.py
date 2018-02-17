@@ -1,7 +1,7 @@
 import uuid
 
 from core.pyre import ignite
-from core.UI_generator import gen_branch_sel_mkp, gen_file_view_mkp, gen_bw_dialog_mkp
+from core.UI_generator import gen_branch_sel_mkp, gen_file_view_mkp, gen_bw_dialog_mkp, gen_cancel_mkp
 
 class Individual():
     pyre = ignite()
@@ -65,11 +65,9 @@ class Individual():
             return
         if callbackData == 'Back':
             self.path.pop()
-
-            if self.GUID == self.path[-1]:
+            if not self.path or self.GUID == self.path[-1]:
                 self.on_login(bot, update)
                 return
-
             self.open(bot, update, self.path[-1], self.current_path())
             return
         if callbackData == 'Edit':
@@ -91,17 +89,31 @@ class Individual():
         itemGUID = None
         if callbackData == 'Box':
             itemGUID = self.create_new_box(bot, update)
+            self.edgeItem = itemGUID
+            self.nextExec = self.on_item_selected
+            self.msgHandler = self.on_rename
         elif callbackData == 'Wave':
             self.listen_new_wave(bot, update)
-
-        self.edgeItem = itemGUID
-        self.nextExec = self.on_item_selected
-        self.msgHandler = self.on_rename
+        elif callbackData == 'Cancel':
+            self.open(bot, update, self.path[-1], self.current_path())
+            self.nextExec = self.on_item_selected
+            return
 
 
     def listen_new_wave(self, bot, update):
-        self.send_markup(bot, update, None, "Ready. Please send us a voice message.")
+        self.send_markup(bot, update, gen_cancel_mkp(), "Ready. Please send us a voice message.")
         self.vceHandler = self.on_wave_received
+        self.msgHandler = self.on_rename
+        self.nextExec = self.on_voice_canceled 
+
+    def on_voice_canceled(self, bot, update):
+        callbackData = update.callback_query.data
+        if callbackData == 'Cancel':
+            self.open(bot, update, self.path[-1], self.current_path())
+            self.nextExec = self.on_item_selected
+            self.vceHandler = None
+            self.msgHandler = None
+
 
     def on_wave_received(self, bot, update):
         wave_uuid = str(uuid.uuid4())
@@ -138,7 +150,6 @@ class Individual():
 
     def open(self, bot, update, directory, message):
         items = self.collect_items_from(directory)
-        #if 'exist' in items: items = None
         meta = self.load_meta(items)
         self.send_markup(bot, update, gen_file_view_mkp(items, meta), message)
 
@@ -153,7 +164,7 @@ class Individual():
 
     def collect_items_from(self, directory):
         items = self.get_data_from(self.branch_path() + f'boxes/{directory}/')
-        if 'exist' in items or not items: items = list()
+        if  not items or 'exist' in items: items = list()
         return items
 
     def load_meta(self, items):

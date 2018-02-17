@@ -28,7 +28,6 @@ def handle_voice(bot, update):
 def enable_sub_service(bot):
     time_now = datetime.now()
     time_start_sending = datetime(time_now.year,time_now.month, time_now.day, time_now.hour, time_now.minute + 1)
-    #time_start_sending = datetime(time_now.year,time_now.month, time_now.day, 13, 15, 10)
     time_delay = time_start_sending - time_now
     seconds = time_delay.total_seconds()
     if seconds < 0: seconds += 24 * 60 * 60

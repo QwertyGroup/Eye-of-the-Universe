@@ -15,14 +15,21 @@ def gen_file_view_mkp(items, meta):
     kb = list()
     pairline = list()
     if items and meta:
+        boxes = list()
+        waves = list()
         for item in items:
             if meta[item]['type'] == 'box':
-                pairline.append(InlineKeyboardButton(f'🕋 {meta[item]["name"]}', callback_data=item))
+                boxes.append(InlineKeyboardButton(f'🕋 {meta[item]["name"]}', callback_data=item))
             if meta[item]['type'] == 'wave':
-                pairline.append(InlineKeyboardButton(f'💨 {meta[item]["name"]}', callback_data=item))                
+                waves.append(InlineKeyboardButton(f'💨 {meta[item]["name"]}', callback_data=item))
+
+        ordered_items = boxes + waves
+        for item in ordered_items:
+            pairline.append(item)
             if len(pairline) == 2:
                 kb.append(pairline)
                 pairline = list()
+        if pairline: kb.append(pairline)
 
     kb.append(cmdline)
     fileViewMkp = InlineKeyboardMarkup(kb)
@@ -52,6 +59,10 @@ def gen_file_view_mkp(items, meta):
 #    return fileViewMkp
 def gen_bw_dialog_mkp():
     kb = [[InlineKeyboardButton('Box 🕋', callback_data='Box'),
-           InlineKeyboardButton('Wave 💨', callback_data='Wave')]]
+           InlineKeyboardButton('Wave 💨', callback_data='Wave')],
+          [InlineKeyboardButton('Cancel', callback_data='Cancel')]]
     dialogMkp = InlineKeyboardMarkup(kb)
     return dialogMkp
+
+def gen_cancel_mkp():
+    return InlineKeyboardMarkup([[InlineKeyboardButton('Cancel', callback_data='Cancel')]])
