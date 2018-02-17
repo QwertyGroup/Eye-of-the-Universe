@@ -124,6 +124,8 @@ class Individual():
         self.edgeItem = wave_uuid
         self.msgHandler = self.on_rename
         self.open(bot, update, self.path[-1], self.current_path())
+        self.nextExec = self.on_item_selected
+        self.vceHandler = None
 
     def on_rename(self, bot, update, newName):
         self.rename_item(self.edgeItem, newName)
