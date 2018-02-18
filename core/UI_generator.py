@@ -66,3 +66,10 @@ def gen_bw_dialog_mkp():
 
 def gen_cancel_mkp():
     return InlineKeyboardMarkup([[InlineKeyboardButton('Cancel', callback_data='Cancel')]])
+
+def gen_del_rename_mkp():
+    kb = [[InlineKeyboardButton('  ⚙️Rename  ', callback_data='Rename'),
+           InlineKeyboardButton('  🌋Delete  ', callback_data='Del')],
+          [InlineKeyboardButton('Cancel', callback_data='Cancel')]]
+    dialogMkp = InlineKeyboardMarkup(kb)
+    return dialogMkp

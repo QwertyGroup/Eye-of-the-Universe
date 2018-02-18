@@ -1,7 +1,7 @@
 import uuid
 
 from core.pyre import ignite
-from core.UI_generator import gen_branch_sel_mkp, gen_file_view_mkp, gen_bw_dialog_mkp, gen_cancel_mkp
+from core.UI_generator import gen_branch_sel_mkp, gen_file_view_mkp, gen_bw_dialog_mkp, gen_cancel_mkp, gen_del_rename_mkp
 
 class Individual():
     pyre = ignite()
@@ -71,7 +71,8 @@ class Individual():
             self.open(bot, update, self.path[-1], self.current_path())
             return
         if callbackData == 'Edit':
-            pass
+            self.send_markup(bot, update, gen_del_rename_mkp(), 'Select an action:    ')
+            self.nextExec = self.on_edit
 
         # else open box or maybe send wave
         meta = self.load_meta([callbackData])[callbackData]
@@ -82,6 +83,15 @@ class Individual():
             bot.forwardMessage(chat_id=update.callback_query.message.chat_id,
                                from_chat_id=meta['chatId'],
                                message_id=meta['msgId'])
+
+    def on_edit(self, bot, update):
+        callbackData = update.callback_query.data
+        if callbackData == 'Rename':
+            pass
+        elif callbackData == 'Del':
+            pass
+        elif callbackData == 'Cancel':
+            self.on_voice_canceled(bot, update) # will work just as is
 
     def on_bw_selected(self, bot, update):
         callbackData = update.callback_query.data
@@ -164,7 +174,7 @@ class Individual():
     def update_path(self):
         self.pyre.child(self.GUID).update({'path': self.current_path()})
 
-    def collect_items_from(self, directory):
+    def collect_items_from(self, directory): 
         items = self.get_data_from(self.branch_path() + f'boxes/{directory}/')
         if  not items or 'exist' in items: items = list()
         return items
