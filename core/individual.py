@@ -84,39 +84,36 @@ class Individual():
                                from_chat_id=meta['chatId'],
                                message_id=meta['msgId'])
 
+    def open_rename_dialog(self, bot, update):
+         self.send_markup(bot, update, gen_rename_mkp(self.latest_items, self.latest_meta), 'Rename')
+         self.nextExec = self.on_rename_selected
+
+    def open_del_dialog(self, bot, update):
+        self.send_markup(bot, update, gen_delete_mkp(self.latest_items, self.latest_meta), 'Delete')
+        self.nextExec = self.on_del_selected
+
     def on_edit(self, bot, update):
         callbackData = update.callback_query.data
-        if callbackData == 'Rename' or callbackData == 'Del':
-            items = self.latest_items
-            meta = self.latest_meta
-            if callbackData == 'Rename':
-                self.send_markup(bot, update, gen_rename_mkp(items, meta), 'Rename')
-                self.nextExec = self.on_rename_selected
-            elif callbackData == 'Del': 
-                self.send_markup(bot, update, gen_delete_mkp(items, meta), 'Delete')
-                self.nextExec = self.on_del_selected
+        if callbackData == 'Rename':
+            self.open_rename_dialog(bot, update)
+        elif callbackData == 'Del': 
+            self.open_del_dialog(bot, update)
         elif callbackData == 'Cancel':
-            self.on_voice_canceled(bot, update) # will work just as is
-
-    def on_canceled(self, bot, update):
-        self.send_markup(bot, update, gen_file_view_mkp(items, meta), message)
-        self.open(bot, update, self.path[-1], self.current_path())
-        self.nextExec = self.on_item_selected
-        self.msgHandler = None
-        self.vceHandler = None
-
+            self.on_canceled(bot, update) 
 
     def on_rename_selected(self, bot, update):
          callbackData = update.callback_query.data
          if callbackData == 'Cancel':
-            self.on_voice_canceled(bot, update)
+            self.on_canceled(bot, update)
          else:
-            print(callbackData)
+            self.edgeItem = callbackData
+            self.msgHandler = self.on_quick_rename
+            self.send_markup(bot, update, None, 'Enter new name:')
 
     def on_del_selected(self, bot, update):
         callbackData = update.callback_query.data
         if callbackData == 'Cancel':
-            self.on_voice_canceled(bot, update)
+            self.on_canceled(bot, update)
         else:
             print(callbackData)
 
@@ -132,8 +129,7 @@ class Individual():
         elif callbackData == 'Wave':
             self.listen_new_wave(bot, update)
         elif callbackData == 'Cancel':
-            self.open(bot, update, self.path[-1], self.current_path())
-            self.nextExec = self.on_item_selected
+            self.on_canceled(bot, update)
             return
 
 
@@ -141,16 +137,15 @@ class Individual():
         self.send_markup(bot, update, gen_cancel_mkp(), "Ready. Please send us a voice message.")
         self.vceHandler = self.on_wave_received
         self.msgHandler = self.on_rename
-        self.nextExec = self.on_voice_canceled 
+        self.nextExec = self.on_canceled 
 
-    def on_voice_canceled(self, bot, update):
+    def on_canceled(self, bot, update):
         callbackData = update.callback_query.data
         if callbackData == 'Cancel':
-            self.open(bot, update, self.path[-1], self.current_path())
+            self.send_markup(bot, update, gen_file_view_mkp(self.latest_items, self.latest_meta), self.current_path())
             self.nextExec = self.on_item_selected
             self.vceHandler = None
             self.msgHandler = None
-
 
     def on_wave_received(self, bot, update):
         wave_uuid = str(uuid.uuid4())
@@ -168,6 +163,13 @@ class Individual():
         self.rename_item(self.edgeItem, newName)
         self.msgHandler = None
         self.open(bot, update, self.path[-1], self.current_path())
+
+    def on_quick_rename(self, bot, update, newName):
+        self.rename_item(self.edgeItem, newName)
+        self.msgHandler = None
+        self.latest_meta[self.edgeItem]['name'] = newName
+        self.open_rename_dialog(bot,update) # for now
+
 
     def rename_item(self, itemGUID, newName):
         path = self.branch_path() + f'meta/{itemGUID}/'
