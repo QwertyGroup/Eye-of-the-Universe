@@ -7,7 +7,7 @@ def gen_branch_sel_mkp():  # Generate Dim Selection Markup
     dimSelMkp = InlineKeyboardMarkup(kb)
     return dimSelMkp
 
-def gen_file_view_mkp(items, meta):
+def gen_file_view_mkp(items, meta, specialSy=''):
     cmdline = [InlineKeyboardButton('Back', callback_data='Back'),
                InlineKeyboardButton('New', callback_data='New'),
                InlineKeyboardButton('Edit', callback_data='Edit')]
@@ -19,9 +19,15 @@ def gen_file_view_mkp(items, meta):
         waves = list()
         for item in items:
             if meta[item]['type'] == 'box':
-                boxes.append(InlineKeyboardButton(f'🕋 {meta[item]["name"]}', callback_data=item))
+                if not specialSy:
+                    boxes.append(InlineKeyboardButton(f'🕋 {meta[item]["name"]}', callback_data=item))
+                else: 
+                    boxes.append(InlineKeyboardButton(f'{specialSy} {meta[item]["name"]}', callback_data=item))
             if meta[item]['type'] == 'wave':
-                waves.append(InlineKeyboardButton(f'💨 {meta[item]["name"]}', callback_data=item))
+                if not specialSy:
+                    waves.append(InlineKeyboardButton(f'💨 {meta[item]["name"]}', callback_data=item))
+                else:
+                    waves.append(InlineKeyboardButton(f'{specialSy} {meta[item]["name"]}', callback_data=item))
 
         ordered_items = boxes + waves
         for item in ordered_items:
@@ -31,7 +37,11 @@ def gen_file_view_mkp(items, meta):
                 pairline = list()
         if pairline: kb.append(pairline)
 
-    kb.append(cmdline)
+    if not specialSy:
+        kb.append(cmdline)
+    else: 
+        kb.append([InlineKeyboardButton('Back', callback_data='Cancel')])
+
     fileViewMkp = InlineKeyboardMarkup(kb)
     return fileViewMkp
 
@@ -73,3 +83,9 @@ def gen_del_rename_mkp():
           [InlineKeyboardButton('Cancel', callback_data='Cancel')]]
     dialogMkp = InlineKeyboardMarkup(kb)
     return dialogMkp
+
+def gen_rename_mkp(items, meta):
+    return gen_file_view_mkp(items, meta, specialSy='⚙️')
+
+def gen_delete_mkp(items, meta):
+    return gen_file_view_mkp(items, meta, specialSy='🔥')

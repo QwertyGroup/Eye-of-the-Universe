@@ -1,7 +1,7 @@
 import uuid
 
 from core.pyre import ignite
-from core.UI_generator import gen_branch_sel_mkp, gen_file_view_mkp, gen_bw_dialog_mkp, gen_cancel_mkp, gen_del_rename_mkp
+from core.UI_generator import gen_branch_sel_mkp, gen_file_view_mkp, gen_bw_dialog_mkp, gen_cancel_mkp, gen_del_rename_mkp, gen_rename_mkp, gen_delete_mkp
 
 class Individual():
     pyre = ignite()
@@ -86,12 +86,39 @@ class Individual():
 
     def on_edit(self, bot, update):
         callbackData = update.callback_query.data
-        if callbackData == 'Rename':
-            pass
-        elif callbackData == 'Del':
-            pass
+        if callbackData == 'Rename' or callbackData == 'Del':
+            items = self.latest_items
+            meta = self.latest_meta
+            if callbackData == 'Rename':
+                self.send_markup(bot, update, gen_rename_mkp(items, meta), 'Rename')
+                self.nextExec = self.on_rename_selected
+            elif callbackData == 'Del': 
+                self.send_markup(bot, update, gen_delete_mkp(items, meta), 'Delete')
+                self.nextExec = self.on_del_selected
         elif callbackData == 'Cancel':
             self.on_voice_canceled(bot, update) # will work just as is
+
+    def on_canceled(self, bot, update):
+        self.send_markup(bot, update, gen_file_view_mkp(items, meta), message)
+        self.open(bot, update, self.path[-1], self.current_path())
+        self.nextExec = self.on_item_selected
+        self.msgHandler = None
+        self.vceHandler = None
+
+
+    def on_rename_selected(self, bot, update):
+         callbackData = update.callback_query.data
+         if callbackData == 'Cancel':
+            self.on_voice_canceled(bot, update)
+         else:
+            print(callbackData)
+
+    def on_del_selected(self, bot, update):
+        callbackData = update.callback_query.data
+        if callbackData == 'Cancel':
+            self.on_voice_canceled(bot, update)
+        else:
+            print(callbackData)
 
     def on_bw_selected(self, bot, update):
         callbackData = update.callback_query.data
@@ -163,6 +190,8 @@ class Individual():
     def open(self, bot, update, directory, message):
         items = self.collect_items_from(directory)
         meta = self.load_meta(items)
+        self.latest_items = items
+        self.latest_meta = meta
         self.send_markup(bot, update, gen_file_view_mkp(items, meta), message)
 
     def path_to_string(self, path):
