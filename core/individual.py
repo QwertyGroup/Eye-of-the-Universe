@@ -89,7 +89,7 @@ class Individual():
          self.nextExec = self.on_rename_selected
 
     def open_del_dialog(self, bot, update):
-        self.send_markup(bot, update, gen_delete_mkp(self.latest_items, self.latest_meta), 'Delete')
+        self.send_markup(bot, update, gen_delete_mkp(self.latest_items, self.latest_meta), '⚠️ Danger ZONE ⚠️\n only one touch is enought')
         self.nextExec = self.on_del_selected
 
     def on_edit(self, bot, update):
@@ -115,7 +115,23 @@ class Individual():
         if callbackData == 'Cancel':
             self.on_canceled(bot, update)
         else:
-            print(callbackData)
+            meta = self.get_data_from(self.branch_path() + f'meta/{callbackData}/')
+            if 'owner' in meta:
+                owner = meta['owner']
+            else:
+                owner = ''
+            if owner == self.GUID or owner == 'rofl':
+                #self.pyre.child(self.branch_path() + 'boxes/{callbackData}').remove() # Не буду
+                #удалять из меты и боксов
+                #self.pyre .child -- delete from meta # wont do that for now -- Нехай остаются
+
+                oldItems = self.collect_items_from(self.path[-1])
+                oldItems.remove(callbackData)
+                self.pyre.child(self.branch_path()).update({f'boxes/{self.path[-1]}/': oldItems}) 
+                self.latest_items.remove(callbackData)
+                self.send_markup(bot, update, gen_delete_mkp(self.latest_items, self.latest_meta), f'"{meta["name"]}" was deleted.')
+            else:
+                self.send_markup(bot, update, gen_delete_mkp(self.latest_items, self.latest_meta), f'"{meta["name"]}" is not yours, syka.')
 
     def on_bw_selected(self, bot, update):
         callbackData = update.callback_query.data
@@ -152,7 +168,7 @@ class Individual():
         msgId = update.message.message_id
         chatId = update.message.chat_id
         self.pyre.update({self.branch_path() + f'boxes/{self.path[-1]}/': self.collect_items_from(self.path[-1]) + [wave_uuid]})
-        self.pyre.child(self.branch_path() + f'meta/{wave_uuid}').update({'name':'new wave', 'type':'wave', 'chatId':chatId, 'msgId':msgId})
+        self.pyre.child(self.branch_path() + f'meta/{wave_uuid}').update({'name':'new wave', 'type':'wave', 'chatId':chatId, 'msgId':msgId, 'owner':self.GUID})
         self.edgeItem = wave_uuid
         self.msgHandler = self.on_rename
         self.open(bot, update, self.path[-1], self.current_path())
@@ -183,7 +199,7 @@ class Individual():
     def create_new_box(self, bot, update):
         box_uuid = str(uuid.uuid4())
         self.pyre.child(self.branch_path() + f'boxes/{box_uuid}').update({'exist':True})
-        self.pyre.update({self.branch_path() + f'meta/{box_uuid}/': {'name':'new box', 'type':'box'},
+        self.pyre.update({self.branch_path() + f'meta/{box_uuid}/': {'name':'new box', 'type':'box', 'owner':self.GUID},
                           self.branch_path() + f'boxes/{self.path[-1]}/':
                           self.collect_items_from(self.path[-1]) + [box_uuid]})
         self.open(bot, update, self.path[-1], self.current_path())
@@ -206,7 +222,10 @@ class Individual():
         self.pyre.child(self.GUID).update({'path': self.current_path()})
 
     def collect_items_from(self, directory): 
-        items = self.get_data_from(self.branch_path() + f'boxes/{directory}/')
+        inv_items = self.get_data_from(self.branch_path() + f'boxes/{directory}/')
+        items = list()
+        for item in inv_items:
+            if item:  items.append(item)
         if  not items or 'exist' in items: items = list()
         return items
 
